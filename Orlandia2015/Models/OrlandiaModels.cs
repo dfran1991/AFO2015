@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 
 namespace Orlandia2015.Models
@@ -18,9 +19,8 @@ namespace Orlandia2015.Models
 
         public int iPoints { get; set; }
 
-        public IEnumerable<Achievement> Achievements { get; set; }
-
-        public Faction Faction { get; set; }
+        public virtual ICollection<PlayerAchievements> Achievements { get; set; }
+        public virtual Faction Faction { get; set; }
     }
 
     public class Faction
@@ -39,6 +39,23 @@ namespace Orlandia2015.Models
         public Guid uAchievementID { get; set; }
 
         public string sName { get; set; }
+
+    }
+
+    public class PlayerAchievements
+    {
+        [Key]
+        public Guid uPlayerAchievementID { get; set; }
+
+        [ForeignKey("Player")]
+        public Guid uPlayerID { get; set; }
+
+        [ForeignKey("Achievement")]
+        public Guid uAchievementID { get; set; }
+
+        public virtual Player Player { get; set; }
+        public virtual Achievement Achievement { get; set; }
+
     }
 
     public class OrlandiaDbContext : DbContext
