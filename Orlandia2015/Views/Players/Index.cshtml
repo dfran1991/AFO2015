@@ -12,16 +12,16 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Faction.sName)
+            Player Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.sName)
+            Faction Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.iRank)
+            Rank
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.iPoints)
+            Points
         </th>
         <th></th>
     </tr>
@@ -29,10 +29,10 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Faction.sName)
+            @Html.DisplayFor(modelItem => item.sName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.sName)
+            @Html.DisplayFor(modelItem => item.Faction.sName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.iRank)
