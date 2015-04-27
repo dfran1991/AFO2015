@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Orlandia2015.Models.Player>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Faction.sName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.sName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.iRank)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.iPoints)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Faction.sName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.sName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.iRank)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.iPoints)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.uPlayerID }) |
+            @Html.ActionLink("Details", "Details", new { id = item.uPlayerID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.uPlayerID })
+        </td>
+    </tr>
+}
+
+</table>
