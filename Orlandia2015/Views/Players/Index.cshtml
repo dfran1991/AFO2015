@@ -1,51 +1,77 @@
-﻿@model IEnumerable<Orlandia2015.Models.Player>
+﻿@using System.Data.Entity.Core.Metadata.Edm
+@model IEnumerable<Orlandia2015.Models.Player>
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Players</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            Player Name
-        </th>
-        <th>
-            Faction Name
-        </th>
-        <th>
-            Rank
-        </th>
-        <th>
-            Points
-        </th>
-        <th></th>
-    </tr>
+<div class="row row-form-inline">
+    <div class="col-md-10">
+        @using (Html.BeginForm("Index", "Players", FormMethod.Post, new { @class = "form-inline" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label for="txtPlayerName">Player Name:</label>
+                <input type="text" class="form-control" id="txtPlayerName" name="txtPlayerName" placeholder="John Doe" value="@ViewBag.Name" />
+            </div>
+            <button type="submit" class="btn btn-primary">Find Player</button>
+        }
+    </div>
+    <div class="col-md-2">
+        @Html.ActionLink("Add Player", "Create", "Players", new { @class = "btn btn-success pull-right" })
+    </div>
+</div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.sName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Faction.sName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.iRank)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.iPoints)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.uPlayerID }) |
-            @Html.ActionLink("Details", "Details", new { id = item.uPlayerID }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.uPlayerID })
-        </td>
-    </tr>
-}
+<div class="row"> 
+    <div class="col-md-12">
+        <div class="table-responsive">
 
-</table>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        Player Name
+                    </th>
+                    <th>
+                        Faction Name
+                    </th>
+                    <th>
+                        Rank
+                    </th>
+                    <th>
+                        Points
+                    </th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.sName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Faction.sName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.iRank)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.iPoints)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.uPlayerID }, new { @class = "btn btn-primary btn-xs" }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.uPlayerID }, new { @class = "btn btn-success btn-xs" }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.uPlayerID }, new { @class = "btn btn-danger btn-xs" })
+                                
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

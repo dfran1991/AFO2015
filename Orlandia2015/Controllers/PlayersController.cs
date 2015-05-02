@@ -21,6 +21,15 @@ namespace Orlandia2015.Controllers
             return View(players.ToList());
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(string txtPlayerName)
+        {
+            var players = db.Players.Include(p => p.Faction);
+            ViewBag.Name = txtPlayerName;
+            return View(players.Where(p => p.sName.Contains(txtPlayerName)).ToList());
+        }
+
         // GET: Players/Details/5
         public ActionResult Details(Guid? id)
         {
