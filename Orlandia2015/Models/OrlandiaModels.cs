@@ -30,6 +30,7 @@ namespace Orlandia2015.Models
 
         public string sName { get; set; }
 
+        [ConcurrencyCheck]
         public int iPoints { get; set; }
     }
 
