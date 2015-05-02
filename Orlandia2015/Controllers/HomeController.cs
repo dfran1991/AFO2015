@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Orlandia2015.Models;
 
 namespace Orlandia2015.Controllers
 {
     public class HomeController : Controller
     {
+        private OrlandiaDbContext db = new OrlandiaDbContext();
+
         public ActionResult Index()
         {
             return View();
@@ -24,6 +27,12 @@ namespace Orlandia2015.Controllers
         {
             ViewBag.Message = "Your contact page.";
 
+            return View();
+        }
+
+        public ActionResult Map()
+        {
+            
             return View();
         }
     }

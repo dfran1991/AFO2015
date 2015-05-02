@@ -9,6 +9,7 @@ namespace Orlandia2015
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+            app.MapSignalR();
         }
     }
 }
