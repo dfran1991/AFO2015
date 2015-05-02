@@ -57,7 +57,7 @@ namespace Orlandia2015.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "uPlayerID,uFactionID,sName,iRank,iPoints")] Player player)
+        public ActionResult Create([Bind(Include = "uPlayerID,uFactionID,sName")] Player player)
         {
             if (ModelState.IsValid)
             {
@@ -92,11 +92,15 @@ namespace Orlandia2015.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "uPlayerID,uFactionID,sName,iRank,iPoints")] Player player)
+        public ActionResult Edit([Bind(Include = "uPlayerID,uFactionID,sName")] Player player)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(player).State = EntityState.Modified;
+                //db.Entry(player).State = EntityState.Modified;
+                db.Players.Attach(player);
+                db.Entry(player).Property(x => x.sName).IsModified = true;
+                db.Entry(player).Property(x => x.uFactionID).IsModified = true;
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
