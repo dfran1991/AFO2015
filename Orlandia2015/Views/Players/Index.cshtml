@@ -63,9 +63,20 @@
                                 @Html.DisplayFor(modelItem => item.iPoints)
                             </td>
                             <td>
-                                @Html.ActionLink("Edit", "Edit", new { id = item.uPlayerID }, new { @class = "btn btn-primary btn-xs" }) |
-                                @Html.ActionLink("Details", "Details", new { id = item.uPlayerID }, new { @class = "btn btn-success btn-xs" }) |
-                                @Html.ActionLink("Delete", "Delete", new { id = item.uPlayerID }, new { @class = "btn btn-danger btn-xs" })
+                                <a href="@Url.Action("Edit", new {id = item.uPlayerID})" title="Edit" class="btn btn-primary btn-xs">
+                                    <i class="glyphicon glyphicon-pencil"></i>
+                                    <span class="sr-only">Edit</span>
+                                </a>
+                                
+                                <a href="@Url.Action("Details", new {id = item.uPlayerID})" title="Details" class="btn btn-success btn-xs">
+                                    <i class="glyphicon glyphicon-list-alt"></i>
+                                    <span class="sr-only">Details</span>
+                                </a>
+                                
+                                <a href="@Url.Action("Delete", new {id = item.uPlayerID})" title="Delete" class="btn btn-danger btn-xs">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                    <span class="sr-only">Delete</span>
+                                </a>
                                 
                             </td>
                         </tr>
