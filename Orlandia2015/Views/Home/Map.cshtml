@@ -1,0 +1,82 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Orlandia Map</title>
+    <style>
+        #circle {
+            background-color: #000;
+            border-radius: 25px;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            left: 500px;
+            top: 500px;
+            mix-blend-mode: overlay;
+        }
+
+        #full {
+            width: 1000px;
+            height: 1000px;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: url("~/Images/MapTop.png");
+        }
+
+        #block {
+            z-index: 1000;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1000px;
+            height: 1000px;
+            background: url("~/Images/MapBottom.png");
+        }
+    </style>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+        var size = 20;
+        var resizeAmount = 5;
+
+        function resize() {
+            if (size < 820) {
+                size += resizeAmount;
+                $("#circle").animate({ width: size + "px", height: size + "px", borderRadius: (size / 2) + "px", left: (500 - (size / 2)) + "px", top: (500 - (size / 2)) + "px" }, 1000, 'linear', resize);
+            }
+        }
+
+        $(function() {
+            var map = $.connection.mapHub;
+
+            map.client.updateSize = function(newSize) {
+                size = newSize;
+            };
+
+            $.connection.hub.start().done(function() {
+                map.server.newClientLoaded();
+            });
+        });
+
+        $(document).ready(function() {
+            resize();
+        });
+    </script>
+</head>
+<body>
+<div id="full">
+    <div id="circle"></div>
+</div>
+<div id="block"></div>
+</body>
+</html>

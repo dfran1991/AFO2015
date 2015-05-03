@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Microsoft.AspNet.SignalR;
+﻿using Microsoft.AspNet.SignalR;
 
 namespace Orlandia2015.Hubs
 {
     public class MapHub : Hub
     {
-        public void UpdateSize(double size)
+        public void UpdateSize(double newSize)
         {
-            Clients.All.updateSize(size);
+            Clients.All.updateSize(newSize);
+        }
+
+        public void NewClientLoaded()
+        {
+            // TODO: Get current size. Then update it.    
         }
     }
 }
