@@ -4,40 +4,41 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Orlandia2015.Models;
 
 namespace Orlandia2015.Controllers
 {
-    public class PlayersController : Controller
+    public class PlayersController : AsyncController
     {
         private OrlandiaDbContext db = new OrlandiaDbContext();
 
         // GET: Players
-        public ActionResult Index()
+        public async Task<ActionResult> IndexAsync()
         {
             var players = db.Players.Include(p => p.Faction);
-            return View(players.ToList());
+            return View("Index", await players.ToListAsync());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(string txtPlayerName)
+        public async Task<ActionResult> IndexAsync(string txtPlayerName)
         {
             var players = db.Players.Include(p => p.Faction);
             ViewBag.Name = txtPlayerName;
-            return View(players.Where(p => p.sName.Contains(txtPlayerName)).ToList());
+            return View("Index", await players.Where(p => p.sName.Contains(txtPlayerName)).ToListAsync());
         }
 
         // GET: Players/Details/5
-        public ActionResult Details(Guid? id)
+        public async Task<ActionResult> DetailsAsync(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Player player = db.Players.Find(id);
+            var player = await db.Players.FindAsync(id);
             if (player == null)
             {
                 return HttpNotFound();
@@ -46,9 +47,9 @@ namespace Orlandia2015.Controllers
         }
 
         // GET: Players/Create
-        public ActionResult Create()
+        public async Task<ActionResult> CreateAsync()
         {
-            ViewBag.uFactionID = new SelectList(db.Factions, "uFactionID", "sName");
+            ViewBag.uFactionID = new SelectList(await db.Factions.ToListAsync(), "uFactionID", "sName");
             return View();
         }
 
@@ -57,33 +58,33 @@ namespace Orlandia2015.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "uPlayerID,uFactionID,sName")] Player player)
+        public async Task<ActionResult> CreateAsync([Bind(Include = "uPlayerID,uFactionID,sName")] Player player)
         {
             if (ModelState.IsValid)
             {
                 player.uPlayerID = Guid.NewGuid();
                 db.Players.Add(player);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.uFactionID = new SelectList(db.Factions, "uFactionID", "sName", player.uFactionID);
+            ViewBag.uFactionID = new SelectList(await db.Factions.ToListAsync(), "uFactionID", "sName", player.uFactionID);
             return View(player);
         }
 
         // GET: Players/Edit/5
-        public ActionResult Edit(Guid? id)
+        public async Task<ActionResult> EditAsync(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Player player = db.Players.Find(id);
+            var player = await db.Players.FindAsync(id);
             if (player == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.uFactionID = new SelectList(db.Factions, "uFactionID", "sName", player.uFactionID);
+            ViewBag.uFactionID = new SelectList(await db.Factions.ToListAsync(), "uFactionID", "sName", player.uFactionID);
             return View(player);
         }
 
@@ -92,7 +93,7 @@ namespace Orlandia2015.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "uPlayerID,uFactionID,sName")] Player player)
+        public async Task<ActionResult> EditAsync([Bind(Include = "uPlayerID,uFactionID,sName")] Player player)
         {
             if (ModelState.IsValid)
             {
@@ -101,21 +102,22 @@ namespace Orlandia2015.Controllers
                 db.Entry(player).Property(x => x.sName).IsModified = true;
                 db.Entry(player).Property(x => x.uFactionID).IsModified = true;
 
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.uFactionID = new SelectList(db.Factions, "uFactionID", "sName", player.uFactionID);
+            ViewBag.uFactionID = new SelectList(await db.Factions.ToListAsync(), "uFactionID", "sName", player.uFactionID);
             return View(player);
         }
 
         // GET: Players/Delete/5
-        public ActionResult Delete(Guid? id)
+        public async Task<ActionResult> DeleteAsync(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Player player = db.Players.Find(id);
+
+            var player = await db.Players.FindAsync(id);
             if (player == null)
             {
                 return HttpNotFound();
@@ -126,11 +128,11 @@ namespace Orlandia2015.Controllers
         // POST: Players/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid id)
+        public async Task<ActionResult> DeleteConfirmedAsync(Guid id)
         {
-            Player player = db.Players.Find(id);
+            var player = await db.Players.FindAsync(id);
             db.Players.Remove(player);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
