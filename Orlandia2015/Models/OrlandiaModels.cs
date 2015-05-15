@@ -41,6 +41,8 @@ namespace Orlandia2015.Models
 
         public string sName { get; set; }
 
+        public int iSortOrder { get; set; }
+
     }
 
     public class PlayerAchievements
