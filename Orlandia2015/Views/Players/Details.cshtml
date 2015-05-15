@@ -42,8 +42,8 @@
 
     </dl>
     <h4>Achievements:</h4>
-    <ul>
-        @foreach (var item in Model.Achievements)
+    <ul class="list-unstyled">
+        @foreach (var item in Model.Achievements.OrderBy(i => i.Achievement.iSortOrder))
         {
             <li>@item.Achievement.sName</li>
         }
