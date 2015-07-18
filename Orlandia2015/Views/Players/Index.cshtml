@@ -64,10 +64,10 @@
                                 @Html.DisplayFor(modelItem => item.iPoints)
                             </td>
                             <td>
-                                <a href="@Url.Action("Edit", new {id = item.uPlayerID})" title="Edit" class="btn btn-primary btn-xs">
-                                    <i class="glyphicon glyphicon-pencil"></i>
-                                    <span class="sr-only">Edit</span>
-                                </a>
+                                @*<a href="@Url.Action("Edit", new {id = item.uPlayerID})" title="Edit" class="btn btn-primary btn-xs">
+    <i class="glyphicon glyphicon-pencil"></i>
+    <span class="sr-only">Edit</span>
+                                </a>*@
                                 
                                 <a href="@Url.Action("Details", new {id = item.uPlayerID})" title="Details" class="btn btn-success btn-xs">
                                     <i class="glyphicon glyphicon-list-alt"></i>

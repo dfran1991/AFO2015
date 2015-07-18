@@ -19,6 +19,8 @@ namespace Orlandia2015.Models
 
         public int iPoints { get; set; }
 
+        public int iMissionsCompleted { get; set; }
+
         public virtual ICollection<PlayerAchievements> Achievements { get; set; }
         public virtual Faction Faction { get; set; }
         public virtual Rank Rank { get; set; }

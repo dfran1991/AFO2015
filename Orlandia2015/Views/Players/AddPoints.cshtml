@@ -6,3 +6,31 @@
 
 <h2>AddPoints</h2>
 
+@using (Html.BeginForm(new { id = @Model.uPlayerID}))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-md-2">Player:</label>
+            <div class="col-md-2">
+                <span style="padding-top:7px; float: left;">@Model.sName</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.iPoints, "Add Points:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBox("iPoints", "0", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.iPoints, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Add Points" class="btn btn-primary" />
+                @Html.ActionLink("Cancel", "Details", new { id = Model.uPlayerID }, new { @class = "btn btn-warning" })
+            </div>
+        </div>
+    </div>
+        
+}

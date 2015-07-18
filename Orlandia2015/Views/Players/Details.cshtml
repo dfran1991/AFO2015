@@ -42,13 +42,13 @@
            
         </dd>
 
-        @if (ViewBag.MaxRankPoints > -1)
+        @if (ViewBag.NextRankPercent > -1)
         {
             <dt>Next Rank:</dt>
             <dd>
                 <div class="progress" style="width:250px; margin-bottom:0;">
-                    <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="@((Model.iPoints * 100) / ViewBag.MaxRankPoints)" aria-valuemin="0" aria-valuemax="100" style="min-width:2em;">
-                        @((Model.iPoints * 100) / ViewBag.MaxRankPoints)%
+                    <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="@ViewBag.NextRankPercent" aria-valuemin="0" aria-valuemax="100" style="min-width:2em; width:@ViewBag.NextRankPercent%">
+                        @ViewBag.NextRankPercent%
                     </div>
                 </div>
             </dd>
@@ -63,7 +63,8 @@
         }
     </ul>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.uPlayerID }) |
-    @Html.ActionLink("Back to List", "Index")
+<p>    
+    @Html.ActionLink("Add Points", "AddPoints", new { id = Model.uPlayerID }, new { @class = "btn btn-md btn-success" })
+    @Html.ActionLink("Edit", "Edit", new { id = Model.uPlayerID }, new { @class = "btn btn-md btn-primary" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-md btn-warning" })
 </p>

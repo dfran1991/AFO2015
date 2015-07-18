@@ -102,9 +102,9 @@ namespace Orlandia2015.Controllers
 
             var nextRank = await db.Ranks.OrderBy(r => r.iRankNumber).FirstOrDefaultAsync(r => r.uFactionID == player.uFactionID && r.iRankPoints > player.iPoints);
             if (nextRank != null)
-                ViewBag.MaxRankPoints = nextRank.iRankPoints;
+                ViewBag.NextRankPercent = ((player.iPoints - player.Rank.iRankPoints) * 100) / (nextRank.iRankPoints - player.Rank.iRankPoints);
             else
-                ViewBag.MaxRankPoints = -1;
+                ViewBag.NextRankPercent = -1;
                 
 
             return View(player);
@@ -216,9 +216,14 @@ namespace Orlandia2015.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddPointsAsync(Guid uPlayerID, int iPoints)
+        public async Task<ActionResult> AddPointsAsync(Guid? id, int iPoints)
         {
-            var player = await db.Players.FindAsync(uPlayerID);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var player = await db.Players.FindAsync(id);
 
             if (player == null)
             {
@@ -238,7 +243,7 @@ namespace Orlandia2015.Controllers
             var nextRank =
                 await
                     db.Ranks.OrderBy(r => r.iRankNumber)
-                        .FirstAsync(r => r.uFactionID == player.uFactionID && r.iRankPoints > player.iPoints);
+                        .FirstOrDefaultAsync(r => r.uFactionID == player.uFactionID && r.iRankPoints > player.iPoints);
 
             if (nextRank != null && nextRank.iRankNumber > player.Rank.iRankNumber)
             {
@@ -248,7 +253,7 @@ namespace Orlandia2015.Controllers
 
             await db.SaveChangesAsync();
 
-            return new RedirectResult("Index");
+            return new RedirectResult(Url.Action("Details", "Players", new { @id = id }));
 
         }
 
