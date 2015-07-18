@@ -14,7 +14,7 @@
             @Html.AntiForgeryToken()
             <div class="form-group">
                 <label for="txtPlayerName">Player Name:</label>
-                <input type="text" class="form-control" id="txtPlayerName" name="txtPlayerName" placeholder="John Doe" value="@ViewBag.Name" />
+                @Html.TextBox("SearchString", (string)ViewBag.Name, new { @class="form-control", placeholder="John Doe" })
             </div>
             <button type="submit" class="btn btn-primary">Find Player</button>
         }
@@ -32,16 +32,16 @@
                 <thead>
                 <tr>
                     <th>
-                        Player Name
+                        @Html.ActionLink("Player Name", "Index", new { sortOrder = ViewBag.NameSortParm })
                     </th>
                     <th>
-                        Faction Name
+                        @Html.ActionLink("Faction Name", "Index", new { sortOrder = ViewBag.FactionSortParm })
                     </th>
                     <th>
-                        Rank
+                        @Html.ActionLink("Rank", "Index", new { sortOrder = ViewBag.RankSortParm })
                     </th>
                     <th>
-                        Points
+                        @Html.ActionLink("Points", "Index", new { sortOrder = ViewBag.PointsSortParm })
                     </th>
                     <th></th>
                 </tr>

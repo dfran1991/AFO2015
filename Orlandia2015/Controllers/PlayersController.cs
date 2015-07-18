@@ -17,19 +17,58 @@ namespace Orlandia2015.Controllers
         private OrlandiaDbContext db = new OrlandiaDbContext();
 
         // GET: Players
-        public async Task<ActionResult> IndexAsync()
-        {
-            var players = db.Players.Include(p => p.Faction);
-            return View("Index", await players.ToListAsync());
-        }
+        //public async Task<ActionResult> IndexAsync()
+        //{
+        //    var players = db.Players.Include(p => p.Faction);
+        //    return View("Index", await players.ToListAsync());
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> IndexAsync(string txtPlayerName)
+        
+        public async Task<ActionResult> IndexAsync(string sortOrder, string searchString)
         {
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.FactionSortParm = sortOrder == "faction" ? "faction_desc" : "faction";
+            ViewBag.RankSortParm = sortOrder == "rank" ? "rank_desc" : "rank";
+            ViewBag.PointsSortParm = sortOrder == "points" ? "points_desc" : "points";
+
             var players = db.Players.Include(p => p.Faction);
-            ViewBag.Name = txtPlayerName;
-            return View("Index", await players.Where(p => p.sName.Contains(txtPlayerName)).ToListAsync());
+
+            if(!string.IsNullOrEmpty(searchString))
+            {
+                players = players.Where(p => p.sName.Contains(searchString));
+            }
+
+            switch(sortOrder)
+            {
+                case "name_desc":
+                    players = players.OrderByDescending(p => p.sName);
+                    break;
+                case "faction":
+                    players = players.OrderBy(p => p.Faction.sName);
+                    break;
+                case "faction_desc":
+                    players = players.OrderByDescending(p => p.Faction.sName);
+                    break;
+                case "rank":
+                    players = players.OrderBy(p => p.Rank.sRankName);
+                    break;
+                case "rank_desc":
+                    players = players.OrderByDescending(p => p.Rank.sRankName);
+                    break;
+                case "points":
+                    players = players.OrderBy(p => p.iPoints);
+                    break;
+                case "points_desc":
+                    players = players.OrderByDescending(p => p.iPoints);
+                    break;
+                    
+                default:
+                    players = players.OrderBy(p => p.sName);
+                    break;
+            }
+
+            return View("Index", await players.ToListAsync());
+
         }
 
         // GET: Players/Details/5
