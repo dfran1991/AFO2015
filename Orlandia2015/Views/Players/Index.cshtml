@@ -1,5 +1,6 @@
 ﻿@using System.Data.Entity.Core.Metadata.Edm
-@model IEnumerable<Orlandia2015.Models.Player>
+@using PagedList.Mvc
+@model PagedList.IPagedList<Orlandia2015.Models.Player>
 
 @{
     ViewBag.Title = "Index";
@@ -9,12 +10,12 @@
 
 <div class="row row-form-inline">
     <div class="col-md-10">
-        @using (Html.BeginForm("Index", "Players", FormMethod.Post, new { @class = "form-inline" }))
+        @using (Html.BeginForm("Index", "Players", FormMethod.Get, new { @class = "form-inline" }))
         {
             @Html.AntiForgeryToken()
             <div class="form-group">
                 <label for="txtPlayerName">Player Name:</label>
-                @Html.TextBox("SearchString", (string)ViewBag.Name, new { @class="form-control", placeholder="John Doe" })
+                @Html.TextBox("SearchString", (string)ViewBag.CurrentFilter, new { @class="form-control", placeholder="John Doe" })
             </div>
             <button type="submit" class="btn btn-primary">Find Player</button>
         }
@@ -32,16 +33,16 @@
                 <thead>
                 <tr>
                     <th>
-                        @Html.ActionLink("Player Name", "Index", new { sortOrder = ViewBag.NameSortParm })
+                        @Html.ActionLink("Player Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
                     </th>
                     <th>
-                        @Html.ActionLink("Faction Name", "Index", new { sortOrder = ViewBag.FactionSortParm })
+                        @Html.ActionLink("Faction Name", "Index", new { sortOrder = ViewBag.FactionSortParm, currentFilter = ViewBag.CurrentFilter })
                     </th>
                     <th>
-                        @Html.ActionLink("Rank", "Index", new { sortOrder = ViewBag.RankSortParm })
+                        @Html.ActionLink("Rank", "Index", new { sortOrder = ViewBag.RankSortParm, currentFilter = ViewBag.CurrentFilter })
                     </th>
                     <th>
-                        @Html.ActionLink("Points", "Index", new { sortOrder = ViewBag.PointsSortParm })
+                        @Html.ActionLink("Points", "Index", new { sortOrder = ViewBag.PointsSortParm, currentFilter = ViewBag.CurrentFilter })
                     </th>
                     <th></th>
                 </tr>
@@ -83,6 +84,10 @@
                     }
                 </tbody>
             </table>
+            <br />
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
         </div>
     </div>
 </div>

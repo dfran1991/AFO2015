@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using Orlandia2015.Models;
 using Orlandia2015.Services;
+using PagedList;
 
 namespace Orlandia2015.Controllers
 {
@@ -24,12 +25,24 @@ namespace Orlandia2015.Controllers
         //}
 
         
-        public async Task<ActionResult> IndexAsync(string sortOrder, string searchString)
+        public async Task<ActionResult> IndexAsync(string sortOrder, string currentFilter, string searchString, int? page)
         {
+            ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.FactionSortParm = sortOrder == "faction" ? "faction_desc" : "faction";
             ViewBag.RankSortParm = sortOrder == "rank" ? "rank_desc" : "rank";
             ViewBag.PointsSortParm = sortOrder == "points" ? "points_desc" : "points";
+
+            if(searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
 
             var players = db.Players.Include(p => p.Faction);
 
@@ -67,7 +80,10 @@ namespace Orlandia2015.Controllers
                     break;
             }
 
-            return View("Index", await players.ToListAsync());
+            int pageSize = 15;
+            int pageNumber = (page ?? 1);
+
+            return View("Index", (await players.ToListAsync()).ToPagedList(pageNumber, pageSize));
 
         }
 
@@ -111,6 +127,8 @@ namespace Orlandia2015.Controllers
             if (ModelState.IsValid)
             {
                 player.uPlayerID = Guid.NewGuid();
+                Rank rank = await db.Ranks.FirstAsync(r => r.uFactionID == player.uFactionID && r.iRankNumber == 0);
+                player.uRankID = rank.uRankID;
                 db.Players.Add(player);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
