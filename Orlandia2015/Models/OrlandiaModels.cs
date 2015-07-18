@@ -15,12 +15,13 @@ namespace Orlandia2015.Models
 
         public string sName { get; set; }
 
-        public int iRank { get; set; }
+        public Guid uRankID { get; set; }
 
         public int iPoints { get; set; }
 
         public virtual ICollection<PlayerAchievements> Achievements { get; set; }
         public virtual Faction Faction { get; set; }
+        public virtual Rank Rank { get; set; }
     }
 
     public class Faction
@@ -61,11 +62,27 @@ namespace Orlandia2015.Models
 
     }
 
+    public class Rank
+    {
+        [Key]
+        public Guid uRankID { get; set; }
+
+        public Guid uFactionID { get; set; }
+
+        public byte iRankNumber { get; set; }
+
+        public short iRankPoints { get; set; }
+
+        public string sRankName { get; set; }
+
+    }
+
     public class OrlandiaDbContext : DbContext
     {
         public DbSet<Player> Players { get; set; }
         public DbSet<Faction> Factions { get; set; }
         public DbSet<Achievement> Achievements { get; set; }
+        public DbSet<Rank> Ranks { get; set; }
     }
 
 }

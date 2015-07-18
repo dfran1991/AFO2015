@@ -29,7 +29,8 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.iRank)
+            @Html.DisplayFor(model => model.Rank.sRankName)
+           
         </dd>
 
         <dt>
@@ -38,7 +39,20 @@
 
         <dd>
             @Html.DisplayFor(model => model.iPoints)
+           
         </dd>
+
+        @if (ViewBag.MaxRankPoints > -1)
+        {
+            <dt>Next Rank:</dt>
+            <dd>
+                <div class="progress" style="width:250px; margin-bottom:0;">
+                    <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="@((Model.iPoints * 100) / ViewBag.MaxRankPoints)" aria-valuemin="0" aria-valuemax="100" style="min-width:2em;">
+                        @((Model.iPoints * 100) / ViewBag.MaxRankPoints)%
+                    </div>
+                </div>
+            </dd>
+        }
 
     </dl>
     <h4>Achievements:</h4>

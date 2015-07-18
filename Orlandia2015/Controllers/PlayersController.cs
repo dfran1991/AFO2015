@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Orlandia2015.Models;
+using Orlandia2015.Services;
 
 namespace Orlandia2015.Controllers
 {
@@ -43,6 +44,14 @@ namespace Orlandia2015.Controllers
             {
                 return HttpNotFound();
             }
+
+            var nextRank = await db.Ranks.OrderBy(r => r.iRankNumber).FirstOrDefaultAsync(r => r.uFactionID == player.uFactionID && r.iRankPoints > player.iPoints);
+            if (nextRank != null)
+                ViewBag.MaxRankPoints = nextRank.iRankPoints;
+            else
+                ViewBag.MaxRankPoints = -1;
+                
+
             return View(player);
         }
 
@@ -134,6 +143,56 @@ namespace Orlandia2015.Controllers
             db.Players.Remove(player);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
+        }
+
+        public async Task<ActionResult> AddPointsAsync(Guid id)
+        {
+            var player = await db.Players.FindAsync(id);
+
+            if (player == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(player);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddPointsAsync(Guid uPlayerID, int iPoints)
+        {
+            var player = await db.Players.FindAsync(uPlayerID);
+
+            if (player == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (iPoints < 0)
+            {
+                return new HttpStatusCodeResult(400, "Invalid number of points to add");
+            }
+
+            player.iPoints += iPoints;
+            db.Players.Attach(player);
+            db.Entry(player).Property(p => p.iPoints).IsModified = true;
+
+            // Check Rank
+            var nextRank =
+                await
+                    db.Ranks.OrderBy(r => r.iRankNumber)
+                        .FirstAsync(r => r.uFactionID == player.uFactionID && r.iRankPoints > player.iPoints);
+
+            if (nextRank != null && nextRank.iRankNumber > player.Rank.iRankNumber)
+            {
+                player.uRankID = nextRank.uRankID;
+                db.Entry(player).Property(p => p.uRankID).IsModified = true;
+            }
+
+            await db.SaveChangesAsync();
+
+            return new RedirectResult("Index");
+
         }
 
         protected override void Dispose(bool disposing)
