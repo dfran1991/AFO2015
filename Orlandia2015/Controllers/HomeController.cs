@@ -4,16 +4,19 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Orlandia2015.Models;
+using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Orlandia2015.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : AsyncController
     {
         private OrlandiaDbContext db = new OrlandiaDbContext();
 
-        public ActionResult Index()
+        public async Task<ActionResult> IndexAsync()
         {
-            return View();
+            var factions = await db.Factions.OrderByDescending(f => f.iPoints).ToListAsync();
+            return View("Index", factions);
         }
 
         public ActionResult About()
