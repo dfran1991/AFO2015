@@ -101,7 +101,7 @@ namespace Orlandia2015.Controllers
             }
 
             var nextRank = await db.Ranks.OrderBy(r => r.iRankNumber).FirstOrDefaultAsync(r => r.uFactionID == player.uFactionID && r.iRankPoints > player.iPoints);
-            if (nextRank != null)
+            if (nextRank != null && nextRank.iRankPoints != player.Rank.iRankPoints)
                 ViewBag.NextRankPercent = ((player.iPoints - player.Rank.iRankPoints) * 100) / (nextRank.iRankPoints - player.Rank.iRankPoints);
             else
                 ViewBag.NextRankPercent = -1;
@@ -239,13 +239,17 @@ namespace Orlandia2015.Controllers
             db.Players.Attach(player);
             db.Entry(player).Property(p => p.iPoints).IsModified = true;
 
+            var currRank = player.Rank;
+
+
             // Check Rank
             var nextRank =
                 await
                     db.Ranks.OrderBy(r => r.iRankNumber)
-                        .FirstOrDefaultAsync(r => r.uFactionID == player.uFactionID && r.iRankPoints > player.iPoints);
+                        .FirstOrDefaultAsync(r => r.uFactionID == player.uFactionID && r.iRankNumber > currRank.iRankNumber);
 
-            if (nextRank != null && nextRank.iRankNumber > player.Rank.iRankNumber)
+
+            if (nextRank != null && nextRank.iRankPoints <= player.iPoints)
             {
                 player.uRankID = nextRank.uRankID;
                 db.Entry(player).Property(p => p.uRankID).IsModified = true;
@@ -256,6 +260,29 @@ namespace Orlandia2015.Controllers
             return new RedirectResult(Url.Action("Details", "Players", new { @id = id }));
 
         }
+
+        // TODO: Implement These
+        public async Task<ActionResult> AddAchievementAsync(Guid? id)
+        {
+            return HttpNotFound();
+        }
+
+        public async Task<ActionResult> AddAchievementAsync(Guid? id, Guid uAchievementID)
+        {
+            return HttpNotFound();
+        }
+
+        public async Task<ActionResult> AddMissionAsync(Guid? id)
+        {
+            return HttpNotFound();
+        }
+
+        public async Task<ActionResult> AddMissionAsync(Guid? id, Guid uMissionID)
+        {
+            return HttpNotFound();
+        }
+
+
 
         protected override void Dispose(bool disposing)
         {
