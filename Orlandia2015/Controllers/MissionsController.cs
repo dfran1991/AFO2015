@@ -18,7 +18,7 @@ namespace Orlandia2015.Controllers
         // GET: Missions
         public async Task<ActionResult> IndexAsync()
         {
-            return View(await db.Missions.ToListAsync());
+            return View(await db.Missions.OrderBy(m => m.sMissionName).ToListAsync());
         }
 
         // GET: Missions/Details/5
