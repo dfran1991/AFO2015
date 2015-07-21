@@ -101,10 +101,25 @@ namespace Orlandia2015.Controllers
             }
 
             var nextRank = await db.Ranks.OrderBy(r => r.iRankNumber).FirstOrDefaultAsync(r => r.uFactionID == player.uFactionID && r.iRankPoints > player.iPoints);
+            var maxRank = await db.Ranks.OrderByDescending(r => r.iRankNumber).FirstOrDefaultAsync(r => r.uFactionID == player.uFactionID);
+
             if (nextRank != null && nextRank.iRankPoints != player.Rank.iRankPoints)
+            {
                 ViewBag.NextRankPercent = ((player.iPoints - player.Rank.iRankPoints) * 100) / (nextRank.iRankPoints - player.Rank.iRankPoints);
+                ViewBag.NextRankPoints = nextRank.iRankPoints;
+                ViewBag.TotalPercent = (player.iPoints * 100) / maxRank.iRankPoints;
+
+                if (ViewBag.TotalPercent > 100)
+                    ViewBag.TotalPercent = 100;
+
+            }
             else
+            {
                 ViewBag.NextRankPercent = -1;
+            }
+
+            var playerRanks = await db.Ranks.OrderBy(r => r.iRankNumber).Where(r => r.uFactionID == player.uFactionID && r.iRankPoints <= player.iPoints).Select(r => r.sRankName).ToListAsync();
+            ViewBag.PlayerRanks = playerRanks;
                 
 
             return View(player);
@@ -166,7 +181,6 @@ namespace Orlandia2015.Controllers
                 //db.Entry(player).State = EntityState.Modified;
                 db.Players.Attach(player);
                 db.Entry(player).Property(x => x.sName).IsModified = true;
-                db.Entry(player).Property(x => x.uFactionID).IsModified = true;
 
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
