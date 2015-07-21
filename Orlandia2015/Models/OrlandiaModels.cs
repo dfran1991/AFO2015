@@ -34,7 +34,6 @@ namespace Orlandia2015.Models
 
         public string sName { get; set; }
 
-        [ConcurrencyCheck]
         public int iPoints { get; set; }
     }
 
@@ -70,6 +69,7 @@ namespace Orlandia2015.Models
         [Key]
         public Guid uRankID { get; set; }
 
+        [ForeignKey("Faction")]
         public Guid uFactionID { get; set; }
 
         public byte iRankNumber { get; set; }
@@ -77,6 +77,8 @@ namespace Orlandia2015.Models
         public short iRankPoints { get; set; }
 
         public string sRankName { get; set; }
+
+        public virtual Faction Faction { get; set; }
 
     }
 
@@ -108,6 +110,20 @@ namespace Orlandia2015.Models
         public virtual Mission Mission { get; set; }
     }
 
+    public class MissionAchievement
+    {
+        [Key]
+        public Guid uMissionAchievementID { get; set; }
+
+        [ForeignKey("Achievement")]
+        public Guid uAchievementID { get; set; }
+
+        public int iMissionCount { get; set; }
+
+        public virtual Achievement Achievement { get; set; }
+
+    }
+
     public class OrlandiaDbContext : DbContext
     {
         public DbSet<Player> Players { get; set; }
@@ -116,6 +132,7 @@ namespace Orlandia2015.Models
         public DbSet<Rank> Ranks { get; set; }
         public DbSet<Mission> Missions { get; set; }
         public DbSet<PlayerMission> PlayerMissions { get; set; }
+        public DbSet<MissionAchievement> MissionAchievements { get; set; }
     }
 
 }
