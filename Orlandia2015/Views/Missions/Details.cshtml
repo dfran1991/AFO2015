@@ -1,0 +1,42 @@
+﻿@model Orlandia2015.Models.Mission
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Mission</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.sMissionName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.sMissionName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.iMissionPoints)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.iMissionPoints)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.bIsMissionQuest)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bIsMissionQuest)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.uMissionID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
