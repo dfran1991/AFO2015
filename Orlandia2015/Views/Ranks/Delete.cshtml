@@ -1,0 +1,58 @@
+﻿@model Orlandia2015.Models.Rank
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete Rank</h2>
+<h3>Are you sure you want to delete this rank? This cannot be undone.</h3>
+<hr />
+
+<div>
+    
+    <dl class="dl-horizontal">
+
+        <dt>
+            Rank Name:
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.sRankName)
+        </dd>
+
+        <dt>
+            Faction:
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Faction.sName)
+        </dd>
+
+        <dt>
+            Rank Number:
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.iRankNumber)
+        </dd>
+
+        <dt>
+            Required Points:
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.iRankPoints)
+        </dd>
+
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            @Html.ActionLink("Cancel", "Index", null, new { @class="btn btn-primary" })
+        </div>
+    }
+</div>

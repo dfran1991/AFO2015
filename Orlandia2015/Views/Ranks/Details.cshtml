@@ -1,0 +1,50 @@
+﻿@model Orlandia2015.Models.Rank
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Rank</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.uFactionID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.uFactionID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.iRankNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.iRankNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.iRankPoints)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.iRankPoints)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.sRankName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.sRankName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.uRankID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
