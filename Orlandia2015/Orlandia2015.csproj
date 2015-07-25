@@ -266,6 +266,7 @@
     <Content Include="Views\Missions\Details.cshtml" />
     <Content Include="Views\Missions\Edit.cshtml" />
     <Content Include="Views\Missions\Index.cshtml" />
+    <Content Include="Views\Players\AddMission.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

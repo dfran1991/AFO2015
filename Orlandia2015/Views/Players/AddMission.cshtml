@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Orlandia2015.Models.Mission>
+
+@{
+    ViewBag.Title = "AddMission";
+}
+
+<h2>Add Mission</h2>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.ActionLink("Create New", "Create", "Missions", null, new { @class = "btn btn-success pull-right" })
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Mission Name
+                        </th>
+                        <th>
+                            Required Rank
+                        </th>
+                        <th>
+                            Points
+                        </th>
+                        <th>
+                            Is Quest
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.sMissionName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.iMissionLevel)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.iMissionPoints)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.bIsMissionQuest)
+                            </td>
+                            <td>
+                                <a href="@Url.Action("AddMissionToPlayer", new { id = ViewBag.id, uMissionID = item.uMissionID })" title="Edit" class="btn btn-primary btn-xs">
+                                    Add Mission
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
