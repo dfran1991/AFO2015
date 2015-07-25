@@ -134,6 +134,7 @@ namespace Orlandia2015.Models
         public DbSet<Rank> Ranks { get; set; }
         public DbSet<Mission> Missions { get; set; }
         public DbSet<PlayerMission> PlayerMissions { get; set; }
+        public DbSet<PlayerAchievements> PlayerAchievements { get; set; }
         public DbSet<MissionAchievement> MissionAchievements { get; set; }
     }
 
