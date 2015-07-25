@@ -93,6 +93,8 @@ namespace Orlandia2015.Models
 
         public bool bIsMissionQuest { get; set; }
 
+        public int iMissionLevel { get; set; }
+
     }
 
     public class PlayerMission
