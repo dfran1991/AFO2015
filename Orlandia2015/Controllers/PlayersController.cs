@@ -11,6 +11,8 @@ using Orlandia2015.Models;
 using Orlandia2015.Services;
 using PagedList;
 
+// TODO: (Next year) Move all business logic into service classes. Code is becoming too difficult to maintain as is.
+
 namespace Orlandia2015.Controllers
 {
     public class PlayersController : AsyncController
@@ -249,6 +251,97 @@ namespace Orlandia2015.Controllers
                 return new HttpStatusCodeResult(400, "Invalid number of points to add");
             }
 
+            await AddPointsToPlayerAsync(player, iPoints);
+
+            return new RedirectResult(Url.Action("Details", "Players", new { @id = id }));
+
+        }
+
+
+        // TODO: Implement These
+        public async Task<ActionResult> AddAchievementAsync(Guid? id)
+        {
+            return HttpNotFound();
+        }
+
+        public async Task<ActionResult> AddAchievementAsync(Guid? id, Guid uAchievementID)
+        {
+            return HttpNotFound();
+        }
+
+        public async Task<ActionResult> AddMissionAsync(Guid? id)
+        {
+            if(!id.HasValue)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var player = await db.Players.FirstOrDefaultAsync(p => p.uPlayerID == id);
+
+            if(player == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var rank = player.Rank;
+            var playerMissions = player.Missions.Select(pm => pm.uMissionID);
+
+            var missions = db.Missions.Where(m => m.iMissionLevel <= rank.iRankNumber);
+
+            var incompleteMissions = await missions.Where(m => !playerMissions.Contains(m.uMissionID) || m.bIsMissionQuest).ToListAsync();
+
+            ViewBag.id = id;
+            return View(incompleteMissions);
+        }
+
+        [ActionName("AddMissionToPlayer")]
+        public async Task<ActionResult> AddMissionAsync(Guid? id, Guid uMissionID)
+        {
+            if(!id.HasValue)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Invalid User ID");
+
+            var player = await db.Players.FirstOrDefaultAsync(p => p.uPlayerID == id);
+
+            if (player == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "User Not Found: " + id.ToString());
+
+            var mission = await db.Missions.FirstOrDefaultAsync(m => m.uMissionID == uMissionID);
+
+            // Handles adding points to player and faction. Also maintains ranks.
+            await AddPointsToPlayerAsync(player, mission.iMissionPoints);
+
+            // Add record of completing mission
+            PlayerMission playerMission = new PlayerMission();
+            playerMission.uMissionID = uMissionID;
+            playerMission.uPlayerID = id.Value;
+            playerMission.uPlayerMissionID = Guid.NewGuid();
+
+
+            // Add completion achievement, if earned.
+            var completedMissions = player.Missions.Count() + 1;
+
+            var missionAchievement = await db.MissionAchievements.FirstOrDefaultAsync(ma => ma.iMissionCount == completedMissions);
+
+            if (missionAchievement != null)
+            {
+                if (!player.Achievements.Any(pa => pa.uAchievementID == missionAchievement.uAchievementID))
+                {
+                    PlayerAchievements playerAchievement = new PlayerAchievements();
+                    playerAchievement.uAchievementID = missionAchievement.uAchievementID;
+                    playerAchievement.uPlayerID = id.Value;
+                    playerAchievement.uPlayerAchievementID = Guid.NewGuid();
+
+                    db.PlayerAchievements.Add(playerAchievement);
+                }
+            }
+
+            db.PlayerMissions.Add(playerMission);
+
+            await db.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = id });
+        }
+
+
+
+        private async Task AddPointsToPlayerAsync(Player player, int iPoints)
+        {
             player.iPoints += iPoints;
             db.Players.Attach(player);
             db.Entry(player).Property(p => p.iPoints).IsModified = true;
@@ -269,34 +362,14 @@ namespace Orlandia2015.Controllers
                 db.Entry(player).Property(p => p.uRankID).IsModified = true;
             }
 
+            // Add Faction points
+            var faction = await db.Factions.FirstOrDefaultAsync(f => f.uFactionID == player.uFactionID);
+            faction.iPoints += iPoints;
+            db.Factions.Attach(faction);
+            db.Entry(faction).Property(f => f.iPoints).IsModified = true;
+
             await db.SaveChangesAsync();
-
-            return new RedirectResult(Url.Action("Details", "Players", new { @id = id }));
-
         }
-
-        // TODO: Implement These
-        public async Task<ActionResult> AddAchievementAsync(Guid? id)
-        {
-            return HttpNotFound();
-        }
-
-        public async Task<ActionResult> AddAchievementAsync(Guid? id, Guid uAchievementID)
-        {
-            return HttpNotFound();
-        }
-
-        public async Task<ActionResult> AddMissionAsync(Guid? id)
-        {
-            return HttpNotFound();
-        }
-
-        public async Task<ActionResult> AddMissionAsync(Guid? id, Guid uMissionID)
-        {
-            return HttpNotFound();
-        }
-
-
 
         protected override void Dispose(bool disposing)
         {
