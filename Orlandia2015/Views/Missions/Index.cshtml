@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Orlandia2015.Models.Mission>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Missions";
 }
 
 <h2>Missions</h2>
@@ -22,6 +22,9 @@
                             Mission Name
                         </th>
                         <th>
+                            Required Rank
+                        </th>
+                        <th>
                             Points
                         </th>
                         <th>
@@ -36,6 +39,9 @@
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => item.sMissionName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.iMissionLevel)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.iMissionPoints)

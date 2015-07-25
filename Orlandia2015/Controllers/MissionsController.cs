@@ -38,7 +38,7 @@ namespace Orlandia2015.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync([Bind(Include = "uMissionID,sMissionName,iMissionPoints,bIsMissionQuest")] Mission mission)
+        public async Task<ActionResult> CreateAsync([Bind(Include = "uMissionID,sMissionName,iMissionPoints,bIsMissionQuest,iMissionLevel")] Mission mission)
         {
             if (ModelState.IsValid)
             {
@@ -71,7 +71,7 @@ namespace Orlandia2015.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync([Bind(Include = "uMissionID,sMissionName,iMissionPoints,bIsMissionQuest")] Mission mission)
+        public async Task<ActionResult> EditAsync([Bind(Include = "uMissionID,sMissionName,iMissionPoints,bIsMissionQuest,iMissionLevel")] Mission mission)
         {
             if (ModelState.IsValid)
             {
