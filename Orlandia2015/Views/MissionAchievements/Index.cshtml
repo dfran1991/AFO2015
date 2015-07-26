@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Orlandia2015.Models.MissionAchievement>
+
+@{
+    ViewBag.Title = "Mission Achievements";
+}
+
+<h2>Mission Achievements</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success pull-right" })
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Achievement Name
+                        </th>
+                        <th>
+                            Missions to earn
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Achievement.sName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.iMissionCount)
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", new { id = item.uMissionAchievementID })" title="Edit" class="btn btn-primary btn-xs">
+                                    <i class="glyphicon glyphicon-pencil"></i>
+                                    <span class="sr-only">Edit</span>
+                                </a>
+                                <a href="@Url.Action("Delete", new { id = item.uMissionAchievementID })" title="Delete" class="btn btn-danger btn-xs">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                    <span class="sr-only">Delete</span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
