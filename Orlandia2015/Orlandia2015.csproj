@@ -175,6 +175,7 @@
     <Compile Include="Controllers\AchievementsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MissionAchievementsController.cs" />
     <Compile Include="Controllers\MissionsController.cs" />
     <Compile Include="Controllers\PlayersController.cs" />
     <Compile Include="Controllers\RanksController.cs" />
@@ -272,6 +273,11 @@
     <Content Include="Views\Achievements\Delete.cshtml" />
     <Content Include="Views\Achievements\Edit.cshtml" />
     <Content Include="Views\Achievements\Index.cshtml" />
+    <Content Include="Views\MissionAchievements\Create.cshtml" />
+    <Content Include="Views\MissionAchievements\Delete.cshtml" />
+    <Content Include="Views\MissionAchievements\Details.cshtml" />
+    <Content Include="Views\MissionAchievements\Edit.cshtml" />
+    <Content Include="Views\MissionAchievements\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
