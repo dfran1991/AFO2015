@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Orlandia2015.Models.Achievement>
+
+@{
+    ViewBag.Title = "Achievements";
+}
+
+<h2>Achievements</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success pull-right" })
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Achievement Name
+                        </th>
+                        <th>
+                            Sort Order
+                        </th>
+                        <th>
+                            Can be manually set
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.sName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.iSortOrder)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.bCanBeManuallySet)
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", new { id = item.uAchievementID })" title="Edit" class="btn btn-primary btn-xs">
+                                    <i class="glyphicon glyphicon-pencil"></i>
+                                    <span class="sr-only">Edit</span>
+                                </a>
+                                <a href="@Url.Action("Delete", new { id = item.uAchievementID })" title="Delete" class="btn btn-danger btn-xs">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                    <span class="sr-only">Delete</span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
