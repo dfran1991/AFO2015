@@ -46,6 +46,7 @@ namespace Orlandia2015.Models
 
         public int iSortOrder { get; set; }
 
+        public bool bCanBeManuallySet { get; set; }
     }
 
     public class PlayerAchievements
