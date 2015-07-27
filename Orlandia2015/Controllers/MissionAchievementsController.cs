@@ -40,7 +40,7 @@ namespace Orlandia2015.Controllers
         // GET: MissionAchievements/Create
         public ActionResult Create()
         {
-            ViewBag.uAchievementID = new SelectList(db.Achievements, "uAchievementID", "sName");
+            ViewBag.uAchievementID = new SelectList(db.Achievements.Where(a => a.bCanBeManuallySet == false).OrderBy(a => a.iSortOrder), "uAchievementID", "sName");
             return View();
         }
 
