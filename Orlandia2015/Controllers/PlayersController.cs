@@ -115,6 +115,12 @@ namespace Orlandia2015.Controllers
                     ViewBag.TotalPercent = 100;
 
             }
+            if(maxRank.iRankPoints <= player.iPoints)
+            {
+                ViewBag.NextRankPercent = -1;
+                ViewBag.NextRankPoints = 0;
+                ViewBag.TotalPercent = 100;
+            }
             else
             {
                 ViewBag.NextRankPercent = -1;
