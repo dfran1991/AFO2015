@@ -267,12 +267,41 @@ namespace Orlandia2015.Controllers
         // TODO: Implement These
         public async Task<ActionResult> AddAchievementAsync(Guid? id)
         {
-            return HttpNotFound();
+            if(!id.HasValue)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var player = await db.Players.FirstOrDefaultAsync(p => p.uPlayerID == id);
+
+            if(player == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var playerAchievements = await db.PlayerAchievements.Where(pa => pa.uPlayerID == id).Select(pa => pa.uAchievementID).ToListAsync();
+            var achievements = await db.Achievements.Where(a => !playerAchievements.Contains(a.uAchievementID) && a.bCanBeManuallySet).OrderBy(a => a.iSortOrder).ToListAsync();
+
+            ViewBag.id = id;
+
+            return View(achievements);
         }
 
+        [ActionName("AddAchievementToPlayer")]
         public async Task<ActionResult> AddAchievementAsync(Guid? id, Guid uAchievementID)
         {
-            return HttpNotFound();
+            if (!id.HasValue)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Invalid User ID");
+
+            var player = await db.Players.FirstOrDefaultAsync(p => p.uPlayerID == id);
+
+            if (player == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "User Not Found: " + id.ToString());
+            
+            PlayerAchievements playerAchievement = new PlayerAchievements();
+            playerAchievement.uAchievementID = uAchievementID;
+            playerAchievement.uPlayerID = id.Value;
+            playerAchievement.uPlayerAchievementID = Guid.NewGuid();
+            db.PlayerAchievements.Add(playerAchievement);
+            await db.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = id });
         }
 
         public async Task<ActionResult> AddMissionAsync(Guid? id)
