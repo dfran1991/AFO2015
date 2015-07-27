@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Orlandia2015.Models.Achievement>
+@{
+    ViewBag.Title = "Add Achievement";
+}
+
+<h2>Add Achievement</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.ActionLink("Create New", "Create", "Achievements", null, new { @class = "btn btn-success pull-right" })
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Achievement Name
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @item.sName
+                            </td>
+                            <td>
+                                <a href="@Url.Action("AddAchievementToPlayer", new { id = ViewBag.id, uMissionID = item.uAchievementID })" title="Edit" class="btn btn-primary btn-xs">
+                                    Add Achievement
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

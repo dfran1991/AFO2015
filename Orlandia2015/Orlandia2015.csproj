@@ -278,6 +278,7 @@
     <Content Include="Views\MissionAchievements\Details.cshtml" />
     <Content Include="Views\MissionAchievements\Edit.cshtml" />
     <Content Include="Views\MissionAchievements\Index.cshtml" />
+    <Content Include="Views\Players\AddAchievement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
