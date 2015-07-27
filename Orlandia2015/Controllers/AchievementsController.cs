@@ -18,7 +18,7 @@ namespace Orlandia2015.Controllers
         // GET: Achievements
         public async Task<ActionResult> IndexAsync()
         {
-            return View(await db.Achievements.ToListAsync());
+            return View(await db.Achievements.OrderBy(a=> a.iSortOrder).ToListAsync());
         }
 
         // GET: Achievements/Create
