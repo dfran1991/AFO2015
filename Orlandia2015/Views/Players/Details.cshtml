@@ -6,6 +6,33 @@
 
 <h2>Player Details</h2>
 <hr />
+
+@if (ViewBag.LeveledUp)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-success">
+                <span class="glyphicon glyphicon-ok-circle"></span>
+                @Model.sName has achieved rank <strong>@Model.Rank.sRankName</strong>
+            </div>
+        </div>
+    </div>
+}
+
+@if (ViewBag.EarnedAchievement == true)
+{
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-success">
+                <span class="glyphicon glyphicon-ok-circle"></span>
+                @Model.sName has achieved achievement <strong>@ViewBag.EarnedAchievementName</strong>
+            </div>
+        </div>
+    </div>
+}
+                
+
 <div class="row">
     <div class="col-md-12">
         <dl class="dl-horizontal">

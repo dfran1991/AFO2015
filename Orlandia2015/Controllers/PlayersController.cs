@@ -90,7 +90,7 @@ namespace Orlandia2015.Controllers
         }
 
         // GET: Players/Details/5
-        public async Task<ActionResult> DetailsAsync(Guid? id)
+        public async Task<ActionResult> DetailsAsync(Guid? id, bool? LeveledUp, Guid? EarnedAchievement)
         {
             if (id == null)
             {
@@ -115,20 +115,32 @@ namespace Orlandia2015.Controllers
                     ViewBag.TotalPercent = 100;
 
             }
+
             if(maxRank.iRankPoints <= player.iPoints)
             {
                 ViewBag.NextRankPercent = -1;
                 ViewBag.NextRankPoints = 0;
                 ViewBag.TotalPercent = 100;
             }
-            else
-            {
-                ViewBag.NextRankPercent = -1;
-            }
 
             var playerRanks = await db.Ranks.OrderBy(r => r.iRankNumber).Where(r => r.uFactionID == player.uFactionID && r.iRankPoints <= player.iPoints).Select(r => r.sRankName).ToListAsync();
             ViewBag.PlayerRanks = playerRanks;
-                
+
+            if (LeveledUp.HasValue)
+                ViewBag.LeveledUp = LeveledUp.Value;
+            else
+                ViewBag.LeveledUp = false;
+
+            if (EarnedAchievement.HasValue)
+            {
+                ViewBag.EarnedAchievement = true;
+                ViewBag.EarnedAchievementName = player.Achievements.FirstOrDefault(pa => pa.uAchievementID == EarnedAchievement.Value).Achievement.sName;
+            }
+            else
+            {
+                ViewBag.EarnedAchievement = false;
+            }
+            
 
             return View(player);
         }
@@ -257,8 +269,11 @@ namespace Orlandia2015.Controllers
                 return new HttpStatusCodeResult(400, "Invalid number of points to add");
             }
 
-            await AddPointsToPlayerAsync(player, iPoints);
+            var bLeveledUp = await AddPointsToPlayerAsync(player, iPoints);
 
+            if (bLeveledUp)
+                return new RedirectResult(Url.Action("Details", "Players", new { @id = id, LeveledUp = true }));
+            
             return new RedirectResult(Url.Action("Details", "Players", new { @id = id }));
 
         }
@@ -339,7 +354,9 @@ namespace Orlandia2015.Controllers
             var mission = await db.Missions.FirstOrDefaultAsync(m => m.uMissionID == uMissionID);
 
             // Handles adding points to player and faction. Also maintains ranks.
-            await AddPointsToPlayerAsync(player, mission.iMissionPoints);
+            var bLeveledUp = await AddPointsToPlayerAsync(player, mission.iMissionPoints);
+
+            
 
             // Add record of completing mission
             PlayerMission playerMission = new PlayerMission();
@@ -349,6 +366,7 @@ namespace Orlandia2015.Controllers
 
 
             // Add completion achievement, if earned.
+            bool bEarnedAchievement = false;
             var completedMissions = player.Missions.Count() + 1;
 
             var missionAchievement = await db.MissionAchievements.FirstOrDefaultAsync(ma => ma.iMissionCount == completedMissions);
@@ -363,6 +381,7 @@ namespace Orlandia2015.Controllers
                     playerAchievement.uPlayerAchievementID = Guid.NewGuid();
 
                     db.PlayerAchievements.Add(playerAchievement);
+                    bEarnedAchievement = true;
                 }
             }
 
@@ -370,13 +389,22 @@ namespace Orlandia2015.Controllers
 
             await db.SaveChangesAsync();
 
+            if (bLeveledUp || bEarnedAchievement)
+                return new RedirectResult(Url.Action("Details", "Players", new { @id = id, LeveledUp = bLeveledUp, EarnedAchievement = bEarnedAchievement ? (Guid?)missionAchievement.uAchievementID : null  }));
+
             return RedirectToAction("Details", new { id = id });
         }
 
 
-
-        private async Task AddPointsToPlayerAsync(Player player, int iPoints)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="iPoints"></param>
+        /// <returns>True if player levels up</returns>
+        private async Task<bool> AddPointsToPlayerAsync(Player player, int iPoints)
         {
+            bool retVal = false;
             player.iPoints += iPoints;
             db.Players.Attach(player);
             db.Entry(player).Property(p => p.iPoints).IsModified = true;
@@ -387,14 +415,15 @@ namespace Orlandia2015.Controllers
             // Check Rank
             var nextRank =
                 await
-                    db.Ranks.OrderBy(r => r.iRankNumber)
-                        .FirstOrDefaultAsync(r => r.uFactionID == player.uFactionID && r.iRankNumber > currRank.iRankNumber);
+                    db.Ranks.OrderByDescending(r => r.iRankNumber)
+                        .FirstOrDefaultAsync(r => r.uFactionID == player.uFactionID && r.iRankNumber > currRank.iRankNumber && r.iRankPoints <= player.iPoints);
 
 
-            if (nextRank != null && nextRank.iRankPoints <= player.iPoints)
+            if (nextRank != null)
             {
                 player.uRankID = nextRank.uRankID;
                 db.Entry(player).Property(p => p.uRankID).IsModified = true;
+                retVal = true;
             }
 
             // Add Faction points
@@ -404,6 +433,8 @@ namespace Orlandia2015.Controllers
             db.Entry(faction).Property(f => f.iPoints).IsModified = true;
 
             await db.SaveChangesAsync();
+
+            return retVal;
         }
 
         protected override void Dispose(bool disposing)
