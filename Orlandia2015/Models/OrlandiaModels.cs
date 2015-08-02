@@ -127,6 +127,16 @@ namespace Orlandia2015.Models
 
     }
 
+    public class GameProperty
+    {
+        [Key]
+        public int iData_id { get; set; }
+
+        public string sName { get; set; }
+
+        public string sValue { get; set; }
+    }
+
     public class OrlandiaDbContext : DbContext
     {
         public DbSet<Player> Players { get; set; }
@@ -137,6 +147,7 @@ namespace Orlandia2015.Models
         public DbSet<PlayerMission> PlayerMissions { get; set; }
         public DbSet<PlayerAchievements> PlayerAchievements { get; set; }
         public DbSet<MissionAchievement> MissionAchievements { get; set; }
+        public DbSet<GameProperty> GameProperties { get; set; }
     }
 
 }
