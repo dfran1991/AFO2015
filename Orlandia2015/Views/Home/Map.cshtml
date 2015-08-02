@@ -28,7 +28,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            background: url("~/Images/MapTop.png");
+            background: url("/Images/Orlandia Map.png");
         }
 
         #block {
@@ -38,7 +38,7 @@
             left: 0;
             width: 1000px;
             height: 1000px;
-            background: url("~/Images/MapBottom.png");
+            background: url("/Images/Orlandia Map - Bottom.png");
         }
     </style>
 
@@ -47,25 +47,25 @@
     <script src="~/signalr/hubs"></script>
     <script>
         var size = 20;
-        var resizeAmount = 5;
-
+        var prevSize = 0;
         function resize() {
-            if (size < 820) {
-                size += resizeAmount;
-                $("#circle").animate({ width: size + "px", height: size + "px", borderRadius: (size / 2) + "px", left: (500 - (size / 2)) + "px", top: (500 - (size / 2)) + "px" }, 1000, 'linear', resize);
-            }
+            if (size > 820)
+                size = 820;
+            console.log("Resizing");
+            $("#circle").animate({ width: size + "px", height: size + "px", borderRadius: (size / 2) + "px", left: (500 - (size / 2)) + "px", top: (500 - (size / 2)) + "px" }, 10000, 'linear', resize);
+            prevSize = size;
         }
 
         $(function() {
             var map = $.connection.mapHub;
 
-            map.client.updateSize = function(newSize) {
+            map.client.updateSize = function (newSize) {
                 size = newSize;
+                console.log(newSize);
             };
 
-            $.connection.hub.start().done(function() {
-                map.server.newClientLoaded();
-            });
+            $.connection.hub.start();
+
         });
 
         $(document).ready(function() {

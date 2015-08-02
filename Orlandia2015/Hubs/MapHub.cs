@@ -1,17 +1,29 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using System;
+using Microsoft.AspNet.SignalR;
+using Orlandia2015.Controllers;
+
 
 namespace Orlandia2015.Hubs
 {
     public class MapHub : Hub
     {
-        public void UpdateSize(double newSize)
+
+        private readonly MapController _mapController;
+
+        public MapHub() : this(MapController.Instance) { }
+
+        public MapHub(MapController mapController)
         {
-            Clients.All.updateSize(newSize);
+            _mapController = mapController;
         }
 
-        public void NewClientLoaded()
+        public double GetCurrentSize()
         {
-            // TODO: Get current size. Then update it.    
+            return _mapController.MapSize;
         }
+
+
+        
     }
+
 }
