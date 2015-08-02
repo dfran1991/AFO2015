@@ -175,6 +175,7 @@
     <Compile Include="Controllers\AchievementsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MapController.cs" />
     <Compile Include="Controllers\MissionAchievementsController.cs" />
     <Compile Include="Controllers\MissionsController.cs" />
     <Compile Include="Controllers\PlayersController.cs" />
@@ -201,6 +202,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Images\Orlandia Map - Bottom.png" />
     <Content Include="Images\Orlandia Map.png" />
+    <Content Include="Images\Textured BG.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
